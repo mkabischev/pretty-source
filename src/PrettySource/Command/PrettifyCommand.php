@@ -39,7 +39,7 @@ class PrettifyCommand extends Command
                 InputArgument::OPTIONAL,
                 'path to file or URL'
             )
-            ->addOption('type', 't', InputOption::VALUE_REQUIRED, 'input format', 'smart');
+            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'input format', 'smart');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,7 +58,7 @@ class PrettifyCommand extends Command
 
         $validFormats = $this->prettifierRegistry->getAvailableFormats();
         $validFormats[] = 'smart';
-        $format = $input->getOption('type');
+        $format = $input->getOption('format');
         if (!in_array($format, $validFormats)) {
             $output->writeln($formatter->formatBlock(array_merge(array('Unknown format: ' . $format, '',
                 "possible formats:"), $validFormats), 'error', true));
