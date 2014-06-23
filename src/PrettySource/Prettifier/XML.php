@@ -37,9 +37,8 @@ class XML implements PrettifierInterface
     {
         $prevInternalErrorValue = libxml_use_internal_errors(true);
         $replaces = 0;
-        $input = str_replace('<?xml version="1.0"?>', '', $input, $replaces);
         try {
-            $xml_obj = new \SimpleXMLElement("<?xml version='1.0' encoding='UTF-8'?>" . $input);
+            $xml_obj = new \SimpleXMLElement($input);
             $level = 4;
             $indent = 0; // current indentation level
             $pretty = array();
