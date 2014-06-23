@@ -1,0 +1,14 @@
+<project name="wikiWatcher" default="phar">
+    <target name="phar">
+        <pharpackage basedir="." destfile="prettysource.phar" stub="stub.php" clistub="app.php">
+            <fileset dir=".">
+                <include name="app.php"/>
+                <include name="src/**"/>
+                <include name="vendor/**"/>
+            </fileset>
+            <metadata>
+                <element name="version" value="1.0"/>
+            </metadata>
+        </pharpackage>
+    </target>
+</project>
