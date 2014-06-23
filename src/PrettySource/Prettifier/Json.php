@@ -43,6 +43,10 @@ class Json implements PrettifierInterface
         if ( $err = $parser->lint( $input ) ) {
             throw new Exception($err->getMessage());
         }
+        $input = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/u', function($match) {
+            return mb_convert_encoding(pack('H*', $match[1]), "utf-8", 'UTF-16BE');
+        }, $input);
+
         $result = '';
         $istr = '  ';
         for ($p = $q = $i = 0; isset($input[$p]); $p++) {
