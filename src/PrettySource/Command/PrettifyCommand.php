@@ -34,10 +34,10 @@ class PrettifyCommand extends Command
     {
         $this->setName("prettify")
             ->setDescription('prettifies json or xml source')
-            ->addOption(
-                'file',
-                'f',
-                InputOption::VALUE_OPTIONAL
+            ->addArgument(
+                'input',
+                InputArgument::OPTIONAL,
+                'path to file or URL'
             )
             ->addOption('type', 't', InputOption::VALUE_REQUIRED, 'input format', 'smart');
     }
@@ -46,7 +46,7 @@ class PrettifyCommand extends Command
     {
         /** @var FormatterHelper $formatter */
         $formatter = $this->getHelperSet()->get('formatter');
-        $file = $input->getOption('file');
+        $file = $input->getArgument('input');
         if (is_null($file)) {
             $file = 'php://stdin';
         }
