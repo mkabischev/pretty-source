@@ -5,6 +5,8 @@ namespace PrettySource\Prettifier;
 class XML implements PrettifierInterface
 {
 
+    const XML_DECLARATION = '<?xml version="1.0" encoding="utf-8"?>';
+
     /**
      * Returns supported format
      *
@@ -36,9 +38,18 @@ class XML implements PrettifierInterface
     public function prettify($input)
     {
         $prevInternalErrorValue = libxml_use_internal_errors(true);
-        $replaces = 0;
+
+        $matches = array();
+        preg_match( '/<\?xml.*\?>/', $input, $matches );
+
+        if ( !empty( $matches ) ) {
+            $input = str_replace( $matches,[], $input );
+            $originDeclaration = $matches[0];
+        } else {
+            $originDeclaration = '';
+        }
         try {
-            $xml_obj = new \SimpleXMLElement($input);
+            $xml_obj = new \SimpleXMLElement(self::XML_DECLARATION . $input);
             $level = 4;
             $indent = 0; // current indentation level
             $pretty = array();
@@ -63,7 +74,6 @@ class XML implements PrettifierInterface
                     if ($indent < 0) {
                         $indent += $level;
                     }
-//                var_dump( $el );
                     $pretty[] = str_repeat(' ', $indent) . $el;
                 }
             }
@@ -77,7 +87,13 @@ class XML implements PrettifierInterface
             libxml_use_internal_errors( $prevInternalErrorValue );
             throw new Exception( $errorMessage );
         }
-        return implode("\n", $pretty);
+
+        $pretty = str_replace( self::XML_DECLARATION, '', implode("\n", $pretty) );
+        if ( !empty( $originDeclaration ) ) {
+            $pretty = $originDeclaration . $pretty;
+        }
+
+        return $pretty;
     }
 
 }
