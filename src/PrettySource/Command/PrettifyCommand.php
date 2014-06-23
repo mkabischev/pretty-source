@@ -34,19 +34,19 @@ class PrettifyCommand extends Command
     {
         $this->setName("prettify")
             ->setDescription('prettifies json or xml source')
-            ->addArgument(
+            ->addOption(
                 'file',
-                InputArgument::OPTIONAL,
-                'path to file with source'
+                'f',
+                InputOption::VALUE_OPTIONAL
             )
-            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'input format', 'smart');
+            ->addOption('type', 't', InputOption::VALUE_REQUIRED, 'input format', 'smart');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var FormatterHelper $formatter */
         $formatter = $this->getHelperSet()->get('formatter');
-        $file = $input->getArgument('file');
+        $file = $input->getOption('file');
         if (is_null($file)) {
             $file = 'php://stdin';
         }
@@ -58,7 +58,7 @@ class PrettifyCommand extends Command
 
         $validFormats = $this->prettifierRegistry->getAvailableFormats();
         $validFormats[] = 'smart';
-        $format = $input->getOption('format');
+        $format = $input->getOption('type');
         if (!in_array($format, $validFormats)) {
             $output->writeln($formatter->formatBlock(array_merge(array('Unknown format: ' . $format, '',
                 "possible formats:"), $validFormats), 'error', true));
@@ -77,9 +77,9 @@ class PrettifyCommand extends Command
             $prettifier = $this->prettifierRegistry->get($format);
         }
 
-        $result = $prettifier->prettify( $content );
+        $result = $prettifier->prettify($content);
 
-        $output->writeln( $result );
+        $output->writeln($result);
 
     }
 
