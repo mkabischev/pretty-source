@@ -12,7 +12,7 @@ sudo chmod +x /usr/bin/prettysource
 ##Usage
 
 ```
-prettify [-t|--type="..."] [input]
+prettify [-f|--format="..."] [input]
 ```
 supported formats:
 - json
